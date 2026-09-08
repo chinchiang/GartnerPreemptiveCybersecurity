@@ -16,6 +16,7 @@ assert.ok(html.startsWith('<!doctype html>'));assert.ok(html.includes('lang="zh-
 const markup=html.replace(/<script>[\s\S]*<\/script>/,'');
 assert.ok(!/<script[^>]*\bsrc=/i.test(markup));assert.ok(!/<link[^>]*\bhref=/i.test(markup));assert.ok(!/<iframe/i.test(markup));
 const script=html.match(/<script>([\s\S]*)<\/script>/)?.[1];assert.ok(script);new vm.Script(script);
+assert.ok(!/process\.env\.NODE_ENV/.test(script),'Browser artifact must not require Node environment variables');
 assert.ok(!/@import\s/.test(html.split('</style>')[0]),'CSS must be fully inlined');
 const data=JSON.parse(fs.readFileSync('lib/downloads.json','utf8'));
 for(const p of platforms){const zipped=fs.readFileSync('public/downloads/'+data[p.id].filename);assert.deepEqual(Buffer.from(data[p.id].base64,'base64'),zipped);assert.ok(html.includes(data[p.id].base64),'ZIP not embedded in offline HTML')}

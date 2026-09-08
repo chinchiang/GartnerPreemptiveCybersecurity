@@ -59,7 +59,7 @@ python scripts/package-delivery.py
 
 ## 驗證與限制
 
-詳見 [QA.md](docs/QA.md)。自動檢查涵蓋資料 schema、引用、零分母、未驗證卻報完成、乾跑不連網、五份 ZIP、離線 HTML 嵌入與編譯。平臺合成行為案例見各技能 `references/acceptance.md`；未執行的模型測試不列為透過。未執行瀏覽器互動／視覺驗收。
+詳見 [QA.md](docs/QA.md)。自動檢查涵蓋資料 schema、引用、零分母、未驗證卻報完成、乾跑不連網、五份 ZIP、離線 HTML 嵌入與編譯。平臺合成行為案例見各技能 `references/acceptance.md`；未執行的模型測試不列為透過。v1.0.1 已以 Chrome 實测離線啟動、導覽、下載及 JSON 檢查，並檢視桌面與手機版截圖。
 
 ## 研究來源與權利
 
