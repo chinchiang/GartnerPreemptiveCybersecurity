@@ -1,0 +1,95 @@
+{
+  "schema_version": "1.0",
+  "scope": {
+    "scope_id": "SYNTH-ODM-01",
+    "service": "合成案例：供應商維護與 MES",
+    "window_start": "2026-09-01T00:00:00+08:00",
+    "window_end": "2026-09-08T00:00:00+08:00",
+    "timezone": "Asia/Taipei",
+    "authorization": "analysis_only",
+    "constraints": [
+      "全部資料為合成，不對任何真實系統執行操作",
+      "OT 不允許主動測試",
+      "未提供現況許可權與版本證據"
+    ],
+    "business_impact": "合成情境：若 MES 不可用，可能影響排程與製造作業；未估算實際金額。",
+    "approved_actions": [],
+    "test_window": null,
+    "stop_conditions": [],
+    "rollback_owner": null
+  },
+  "assets": [
+    {
+      "asset_id": "gateway-01",
+      "name": "合成維護閘道",
+      "criticality": "high",
+      "owner": "合成網路團隊",
+      "version": null,
+      "observed_at": "2026-09-07T10:00:00+08:00"
+    },
+    {
+      "asset_id": "mes-01",
+      "name": "合成 MES 服務",
+      "criticality": "critical",
+      "owner": "合成製造 IT 團隊",
+      "version": null,
+      "observed_at": "2026-09-07T10:00:00+08:00"
+    }
+  ],
+  "signals": [
+    {
+      "signal_id": "SIG-01",
+      "description": "合成背景線索：維護入口的許可權範圍需查證，非真實漏洞通告",
+      "source": "synthetic://scenario/maintenance",
+      "observed_at": null,
+      "collected_at": "2026-09-08T00:00:00+08:00"
+    }
+  ],
+  "controls": [
+    {
+      "control_id": "CTRL-01",
+      "asset_ids": [
+        "gateway-01"
+      ],
+      "description": "設計檔案表示需要 MFA，但尚未證實當前強制狀態",
+      "evidence_id": "EV-01"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "EV-01",
+      "source": "synthetic://design/remote-maintenance",
+      "locator": "合成設計檔案第 1 節",
+      "observed_at": "2026-09-07T10:00:00+08:00",
+      "collected_at": "2026-09-08T00:00:00+08:00",
+      "description": "設計層面的 gateway→維護區→MES 服務關係，不證明管理許可權可達"
+    }
+  ],
+  "relationships": [
+    {
+      "from": "gateway-01",
+      "to": "mes-01",
+      "relation": "可能經由維護區到達 MES；實際許可權待確認",
+      "evidence_ids": [
+        "EV-01"
+      ],
+      "status": "hypothesis"
+    }
+  ],
+  "exposures": [
+    {
+      "exposure_id": "EXP-01",
+      "asset_ids": [
+        "gateway-01",
+        "mes-01"
+      ],
+      "type": "identity",
+      "description": "合成供應商許可權範圍待查；不構成已證實可利用的曝險。",
+      "observed_at": null,
+      "evidence_ids": [
+        "EV-01"
+      ],
+      "status": "hypothesis"
+    }
+  ]
+}

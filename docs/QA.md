@@ -1,0 +1,35 @@
+# 交付驗證記錄
+
+日期：2026-09-08。這份記錄區分自動檢查、來源查核與未執行的驗證，不將程式成功編譯等同模型成效。
+
+## 已執行
+
+| 類別 | 範圍與結果 |
+|---|---|
+| 原始研究 | 閱讀 G00830315 關鍵定義及完整技術列表；目視核對 p.3 雷達圖和附錄 1A，確認 SSDS／AMTD 正文與圖表歧異 |
+| 平台來源 | 核對 ChatGPT／Claude／Grok／NVIDIA／DeepSeek 的官方技能或宿主文件；保留實際適用介面及限制 |
+| 技能格式 | 五套 SKILL.md 均通過 skill-creator quick_validate；名稱、YAML、相對檔案引用完整 |
+| 型別 | `npm run typecheck` 通過 |
+| 本專案程式檢查 | `npm run lint` 通過；範圍為 app、lib、scripts、offline.tsx、vite.offline.config.ts |
+| 資料與適配器 | 13 項 unittest 通過：schema、scope、資產與證據引用、重複 ID、不完整授權、零分母、未驗證狀態、V4 名稱、端點限制與離線準備 |
+| API 乾跑 | DeepSeek v4 和 Nemotron 適配器均輸出 network_called=false、input_valid=true；沒有使用金鑰或發生付費呼叫 |
+| 網站 | 離線建置成功；預覽頁 HTTP 200；單檔 HTML 與 JavaScript 語法檢查通過 |
+| 離線下載 | 五份 ZIP 的 CRC 與內容完整；嵌入 HTML 的 base64 解碼後與 ZIP 原檔逐位元相同 |
+| 內容清點 | 6 階段、10 類輸入、8 類輸出、11 技術、5 平台、11 項來源均納入 |
+
+## 未宣稱完成的驗證
+
+- 未於五個真實平台帳號進行端到端模型推論，未比較模型準確率、成本或速度。`references/acceptance.md` 的 10 個行為案例是待執行的驗收規格，不是已取得的模型成績。
+- 未執行瀏覽器自動點擊、截圖或視覺驗收。本次驗證包含型別、編譯、資產、HTML 包装、JSON 與程式語法；不將它們等同所有瀏覽器的互動驗證。
+- 未連接真實企業資產、掃描器、EDR、SIEM、DNS 或工單服務，未執行任何安全控制變更。合成報告是作者提供的教學範例。
+- 來源中的市場預測與技術採用時間仍是研究主張，未當成實際市場結果。
+
+## 保留的開發環境限制
+
+Sites scaffold 所附、未被本網站使用的 UI 元件在全目錄 `lint:all` 下存在既有檢查問題。本專案沒有為使全目錄通過而改寫這些未使用元件；維護者擴充使用前需重新檢查。
+
+2026-09-08 的 `npm audit --omit=dev` 對 scaffold 開發／伺服器依賴圖報告 6 項（5 high、1 low），涉及 vinext、react-server-dom-webpack、vite、image-size、undici、esbuild。沒有以強制升版改動 scaffold。交付的單檔 HTML 只在瀏覽器執行 React 用戶端，不執行這些伺服器或開發服務；這不是对整個原始碼依賴圖的「無漏洞」聲明。若日後改成對外伺服器部署，應先升級並重新驗證。此次未建立公開部署。
+
+## 可重現
+
+完整命令見根目錄 README.md。最終 ZIP 與單檔 HTML 的 SHA-256 記錄於發布資產 SHA256SUMS.txt。已知差異與未驗證項目保留在網站和完整文字手冊中。

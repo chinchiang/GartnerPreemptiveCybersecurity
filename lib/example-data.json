@@ -1,0 +1,176 @@
+{
+  "input": {
+    "schema_version": "1.0",
+    "scope": {
+      "scope_id": "SYNTH-ODM-01",
+      "service": "合成案例：供應商維護與 MES",
+      "window_start": "2026-09-01T00:00:00+08:00",
+      "window_end": "2026-09-08T00:00:00+08:00",
+      "timezone": "Asia/Taipei",
+      "authorization": "analysis_only",
+      "constraints": [
+        "全部資料為合成，不對任何真實系統執行操作",
+        "OT 不允許主動測試",
+        "未提供現況許可權與版本證據"
+      ],
+      "business_impact": "合成情境：若 MES 不可用，可能影響排程與製造作業；未估算實際金額。",
+      "approved_actions": [],
+      "test_window": null,
+      "stop_conditions": [],
+      "rollback_owner": null
+    },
+    "assets": [
+      {
+        "asset_id": "gateway-01",
+        "name": "合成維護閘道",
+        "criticality": "high",
+        "owner": "合成網路團隊",
+        "version": null,
+        "observed_at": "2026-09-07T10:00:00+08:00"
+      },
+      {
+        "asset_id": "mes-01",
+        "name": "合成 MES 服務",
+        "criticality": "critical",
+        "owner": "合成製造 IT 團隊",
+        "version": null,
+        "observed_at": "2026-09-07T10:00:00+08:00"
+      }
+    ],
+    "signals": [
+      {
+        "signal_id": "SIG-01",
+        "description": "合成背景線索：維護入口的許可權範圍需查證，非真實漏洞通告",
+        "source": "synthetic://scenario/maintenance",
+        "observed_at": null,
+        "collected_at": "2026-09-08T00:00:00+08:00"
+      }
+    ],
+    "controls": [
+      {
+        "control_id": "CTRL-01",
+        "asset_ids": [
+          "gateway-01"
+        ],
+        "description": "設計檔案表示需要 MFA，但尚未證實當前強制狀態",
+        "evidence_id": "EV-01"
+      }
+    ],
+    "evidence": [
+      {
+        "evidence_id": "EV-01",
+        "source": "synthetic://design/remote-maintenance",
+        "locator": "合成設計檔案第 1 節",
+        "observed_at": "2026-09-07T10:00:00+08:00",
+        "collected_at": "2026-09-08T00:00:00+08:00",
+        "description": "設計層面的 gateway→維護區→MES 服務關係，不證明管理許可權可達"
+      }
+    ],
+    "relationships": [
+      {
+        "from": "gateway-01",
+        "to": "mes-01",
+        "relation": "可能經由維護區到達 MES；實際許可權待確認",
+        "evidence_ids": [
+          "EV-01"
+        ],
+        "status": "hypothesis"
+      }
+    ],
+    "exposures": [
+      {
+        "exposure_id": "EXP-01",
+        "asset_ids": [
+          "gateway-01",
+          "mes-01"
+        ],
+        "type": "identity",
+        "description": "合成供應商許可權範圍待查；不構成已證實可利用的曝險。",
+        "observed_at": null,
+        "evidence_ids": [
+          "EV-01"
+        ],
+        "status": "hypothesis"
+      }
+    ]
+  },
+  "report": {
+    "schema_version": "1.0",
+    "scope_id": "SYNTH-ODM-01",
+    "summary": "合成示範：存在需優先查證的維護路徑假說；尚未證明可利用或已緩解。",
+    "assumptions": [
+      "設計關係可能與現況不同"
+    ],
+    "gaps": [
+      "閘道實際版本",
+      "MFA 是否強制及例外",
+      "供應商群組成員與 MES 可達許可權",
+      "主動測試授權和維護視窗"
+    ],
+    "evidence": [
+      {
+        "evidence_id": "EV-01",
+        "source": "synthetic://design/remote-maintenance",
+        "locator": "合成設計檔案第 1 節",
+        "observed_at": "2026-09-07T10:00:00+08:00",
+        "collected_at": "2026-09-08T00:00:00+08:00",
+        "grade": "A",
+        "claim_type": "source_claim",
+        "claim": "合成設計檔案描述服務關係與 MFA 設計要求；並非實測"
+      }
+    ],
+    "findings": [
+      {
+        "finding_id": "F-01",
+        "asset_ids": [
+          "gateway-01",
+          "mes-01"
+        ],
+        "hypothesis": "若供應商群組可經維護區取得 MES 管理許可權，身分濫用可能造成關鍵服務損害；前提未確認。",
+        "evidence_ids": [
+          "EV-01"
+        ],
+        "priority": "urgent_verification",
+        "priority_reason": "業務影響可能高但許可權前提未知，先查證現況而非宣稱漏洞已存在。",
+        "status": "hypothesis",
+        "validation": {
+          "status": "not_run",
+          "method": "先取得唯讀 IAM、網路組態與 MFA 例外；如另獲授權再於隔離等價環境驗證安全與合法維護情境。",
+          "evidence_ids": [],
+          "limitations": [
+            "沒有實測",
+            "只具有設計檔案",
+            "analysis_only"
+          ]
+        },
+        "actions": [
+          {
+            "action_id": "ACT-01",
+            "effect": "Deny",
+            "proposal": "查清許可權後提出服務與時段最小許可權方案，依變更授權實施。",
+            "owner": "合成網路團隊",
+            "due_at": null,
+            "approval_required": true,
+            "business_impact": "需確認供應商合法維護可用，避免影響生產。",
+            "rollback": "由 owner 保留原設定快照；達停止條件則回復並驗證合法流程。"
+          }
+        ],
+        "residual_risk": "現況尚未驗證、措施未實施；不得認定風險已降低。"
+      }
+    ],
+    "metrics": [
+      {
+        "name": "驗證路徑縮減率",
+        "value": null,
+        "numerator": null,
+        "denominator": null,
+        "limitation": "沒有實測基線及重測，不得計算降低率。"
+      }
+    ],
+    "limitations": [
+      "全部內容為合成案例",
+      "本範例由套件作者提供，不是任何平臺模型的實測輸出",
+      "未執行任何變更或掃描"
+    ]
+  }
+}
